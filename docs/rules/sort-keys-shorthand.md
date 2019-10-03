@@ -9,7 +9,7 @@ This rule checks all property definitions of object expressions and verifies tha
 Examples of **incorrect** code for this rule:
 
 ```js
-/*eslint sort-keys: "error"*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: "error"*/
 /*eslint-env es6*/
 
 let obj = { a: 1, c: 3, b: 2 };
@@ -31,7 +31,7 @@ let obj = { a: 1, [S]: 3, b: 2 };
 Examples of **correct** code for this rule:
 
 ```js
-/*eslint sort-keys: "error"*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: "error"*/
 /*eslint-env es6*/
 
 let obj = { a: 1, b: 2, c: 3 };
@@ -61,10 +61,15 @@ let obj = { b: 1, ...c, a: 2 };
 
 ```json
 {
-  "sort-keys": [
+  "sort-keys-shorthand/sort-keys-shorthand": [
     "error",
     "asc",
-    { "caseSensitive": true, "natural": false, "minKeys": 2 }
+    {
+      "caseSensitive": true,
+      "natural": false,
+      "minKeys": 2,
+      "shorthand": "ignore"
+    }
   ]
 }
 ```
@@ -79,6 +84,10 @@ The 2nd option is an object which has 3 properties.
 - `caseSensitive` - if `true`, enforce properties to be in case-sensitive order. Default is `true`.
 - `minKeys` - Specifies the minimum number of keys that an object should have in order for the object's unsorted keys to produce an error. Default is `2`, which means by default all objects with unsorted keys will result in lint errors.
 - `natural` - if `true`, enforce properties to be in natural order. Default is `false`. Natural Order compares strings containing combination of letters and numbers in the way a human being would sort. It basically sorts numerically, instead of sorting alphabetically. So the number 10 comes after the number 3 in Natural Sorting.
+- `shorthand` handling for shorthand properties
+  - `ignore` no rules for shorthands
+  - `first` shorthand properties must be first
+  - `last` shrothand properties must be last
 
 Example for a list:
 
@@ -101,7 +110,7 @@ With `natural` as false, the ordering would be
 Examples of **incorrect** code for the `"desc"` option:
 
 ```js
-/*eslint sort-keys: ["error", "desc"]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "desc"]*/
 /*eslint-env es6*/
 
 let obj = { b: 2, c: 3, a: 1 };
@@ -117,7 +126,7 @@ let obj = { 10: b, 2: c, 1: a };
 Examples of **correct** code for the `"desc"` option:
 
 ```js
-/*eslint sort-keys: ["error", "desc"]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "desc"]*/
 /*eslint-env es6*/
 
 let obj = { c: 3, b: 2, a: 1 };
@@ -135,7 +144,7 @@ let obj = { 2: c, 10: b, 1: a };
 Examples of **incorrect** code for the `{caseSensitive: false}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {caseSensitive: false}]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {caseSensitive: false}]*/
 /*eslint-env es6*/
 
 let obj = { a: 1, c: 3, C: 4, b: 2 };
@@ -145,7 +154,7 @@ let obj = { a: 1, C: 3, c: 4, b: 2 };
 Examples of **correct** code for the `{caseSensitive: false}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {caseSensitive: false}]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {caseSensitive: false}]*/
 /*eslint-env es6*/
 
 let obj = { a: 1, b: 2, c: 3, C: 4 };
@@ -157,7 +166,7 @@ let obj = { a: 1, b: 2, C: 3, c: 4 };
 Examples of **incorrect** code for the `{natural: true}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {natural: true}]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {natural: true}]*/
 /*eslint-env es6*/
 
 let obj = { 1: a, 10: c, 2: b };
@@ -166,7 +175,7 @@ let obj = { 1: a, 10: c, 2: b };
 Examples of **correct** code for the `{natural: true}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {natural: true}]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {natural: true}]*/
 /*eslint-env es6*/
 
 let obj = { 1: a, 2: b, 10: c };
@@ -177,7 +186,7 @@ let obj = { 1: a, 2: b, 10: c };
 Examples of **incorrect** code for the `{minKeys: 4}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {minKeys: 4}]*/
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {minKeys: 4}]*/
 /*eslint-env es6*/
 
 // 4 keys
@@ -201,7 +210,7 @@ let obj = {
 Examples of **correct** code for the `{minKeys: 4}` option:
 
 ```js
-/*eslint sort-keys: ["error", "asc", {minKeys: 4}]*//
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {minKeys: 4}]*//
 /*eslint-env es6*/
 
 // 3 keys
@@ -218,14 +227,38 @@ let obj = {
 };
 ```
 
+### shorthand
+
+Examples of **incorrect** code for the `{shorthand: 'first'}` option:
+
+```js
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {shorthand: 'first'}]*/
+/*eslint-env es6*/
+
+let obj = {
+  a: 1,
+  b, // not sorted correctly (should be 1st key)
+  c: 3,
+  d: 4
+};
+```
+
+Examples of **correct** code for the `{shorthand: 'first'}` option:
+
+```js
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {shorthand: 'first'}]*//
+/*eslint-env es6*/
+
+let obj = {
+    b,
+    a: 1,
+    c: 3,
+};
+```
+
 ## When Not To Use It
 
 If you don't want to notify about properties' order, then it's safe to disable this rule.
-
-## Related Rules
-
-- [sort-imports](sort-imports.md)
-- [sort-vars](sort-vars.md)
 
 ## Compatibility
 
