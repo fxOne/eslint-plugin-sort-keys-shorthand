@@ -7,7 +7,7 @@ module.exports = {
   configs: {
     recommended: {
       rules: {
-        'sort-keys-shorthand/sort-keys-shorthand': 'warn'
+        'sort-keys-shorthand/sort-keys-shorthand': 'error'
       }
     }
   }
