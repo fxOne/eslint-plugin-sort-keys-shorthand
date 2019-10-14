@@ -28,6 +28,35 @@ Add "sort-keys-shorthand" to the plugins section.
 }
 ```
 
+Deactivate the original `sort-keys` rule.
+
+```json
+{
+  "rules": {
+    "sort-keys": 0
+  }
+}
+```
+
+Enable `sort-keys-shorthand`:
+
+```json
+{
+  "rules": {
+    "sort-keys-shorthand/sort-keys-shorthand": [
+      "error",
+      "asc",
+      {
+        "caseSensitive": true,
+        "natural": false,
+        "minKeys": 2,
+        "shorthand": "first"
+      }
+    ]
+  }
+}
+```
+
 # Rules
 
 - [sort-keys-shorthand/sort-keys-shorthand](docs/rules/sort-keys-shorthand.md): extended rule with shorthand support
