@@ -66,8 +66,9 @@ let obj = { b: 1, ...c, a: 2 };
     "asc",
     {
       "caseSensitive": true,
-      "natural": false,
+      "ignoreSingleline": false,
       "minKeys": 2,
+      "natural": false,
       "shorthand": "ignore"
     }
   ]
@@ -82,6 +83,7 @@ The 1st option is `"asc"` or `"desc"`.
 The 2nd option is an object which has 3 properties.
 
 - `caseSensitive` - if `true`, enforce properties to be in case-sensitive order. Default is `true`.
+- `ignoreSingleline` - if `true`, this rule is ignored on single line objects. Default is `false`.
 - `minKeys` - Specifies the minimum number of keys that an object should have in order for the object's unsorted keys to produce an error. Default is `2`, which means by default all objects with unsorted keys will result in lint errors.
 - `natural` - if `true`, enforce properties to be in natural order. Default is `false`. Natural Order compares strings containing combination of letters and numbers in the way a human being would sort. It basically sorts numerically, instead of sorting alphabetically. So the number 10 comes after the number 3 in Natural Sorting.
 - `shorthand` handling for shorthand properties
@@ -159,6 +161,31 @@ Examples of **correct** code for the `{caseSensitive: false}` option:
 
 let obj = { a: 1, b: 2, c: 3, C: 4 };
 let obj = { a: 1, b: 2, C: 3, c: 4 };
+```
+
+### ignoreSingleline
+
+Examples of **incorrect** code for the `{ignoreSingleline: true}` option:
+
+```js
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {ignoreSingleline: true}]*/
+/*eslint-env es6*/
+
+let obj = {
+  e: 1,
+  c: 3,
+  C: 4,
+  b: 2
+};
+```
+
+Examples of **correct** code for the `{ignoreSingleline: true}` option:
+
+```js
+/*eslint sort-keys-shorthand/sort-keys-shorthand: ["error", "asc", {ignoreSingleline: true}]*/
+/*eslint-env es6*/
+
+let obj = { e: 1, b: 2, c: 3, C: 4 };
 ```
 
 ### natural

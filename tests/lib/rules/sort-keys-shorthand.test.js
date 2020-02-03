@@ -406,6 +406,17 @@ ruleTester.run('sort-keys-shorthand', rule, {
       code: 'var obj = {a:1, b:{x:1, y:1}, c:1, d}',
       options: ['asc', { shorthand: 'last' }],
       parserOptions: { ecmaVersion: 2018 }
+    },
+    //ignore single lines
+    {
+      code: 'var obj = {d, a:1, b:{x:1, y:1}, c:1}',
+      options: ['asc', { shorthand: 'last', ignoreSingleline: true }],
+      parserOptions: { ecmaVersion: 2018 }
+    },
+    {
+      code: 'var obj = {d, a:1, b:{x:1, y:1}, c:1, e}',
+      options: ['asc', { shorthand: 'last', ignoreSingleline: true }],
+      parserOptions: { ecmaVersion: 2018 }
     }
   ],
   invalid: [
@@ -1101,6 +1112,28 @@ ruleTester.run('sort-keys-shorthand', rule, {
     {
       code: 'var obj = {d, a:1, b:{x:1, y:1}, c:1, e}',
       options: ['asc', { shorthand: 'last' }],
+      parserOptions: { ecmaVersion: 2018 },
+      errors: [
+        "Expected object keys to be in ascending order with shorthand properties last. 'a' should be before 'd'."
+      ]
+    },
+    //with ignore singleline
+    {
+      code: `var obj = {
+        d, a:1, b:{x:1, y:1}, c:1
+      }`,
+      options: ['asc', { shorthand: 'last', ignoreSingleline: true }],
+      parserOptions: { ecmaVersion: 2018 },
+      errors: [
+        "Expected object keys to be in ascending order with shorthand properties last. 'a' should be before 'd'."
+      ]
+    },
+    {
+      code: `var obj = {
+        d,
+        a:1, b:{x:1, y:1}, c:1, e
+      }`,
+      options: ['asc', { shorthand: 'last', ignoreSingleline: true }],
       parserOptions: { ecmaVersion: 2018 },
       errors: [
         "Expected object keys to be in ascending order with shorthand properties last. 'a' should be before 'd'."
