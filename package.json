@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-sort-keys-shorthand",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "eslint plugin which support sorting shorthand keys",
   "main": "index.js",
   "scripts": {
