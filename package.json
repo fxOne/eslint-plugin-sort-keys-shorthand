@@ -10,7 +10,7 @@
     "eslint"
   ],
   "peerDependencies": {
-    "eslint": "^6.0.0"
+    "eslint": "^6.0.0 || ^7.0.0"
   },
   "author": "Dominic Buetow",
   "license": "MIT",
