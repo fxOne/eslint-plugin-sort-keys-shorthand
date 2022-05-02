@@ -4,6 +4,7 @@
   "description": "eslint plugin which support sorting shorthand keys",
   "main": "index.js",
   "scripts": {
+    "release": "changeset publish",
     "test": "istanbul cover node_modules/mocha/bin/_mocha tests/lib/**/*.js"
   },
   "keywords": [
@@ -21,6 +22,7 @@
     "mocha": "7"
   },
   "dependencies": {
+    "@changesets/cli": "^2.22.0",
     "natural-compare": "^1.4.0"
   },
   "repository": {
