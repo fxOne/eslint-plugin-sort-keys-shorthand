@@ -800,7 +800,13 @@ ruleTester.run('sort-keys-shorthand', rule, {
       code: "var obj = {'#':1, À:3, 'Z':2, è:4}",
       options: ['asc', { natural: true, caseSensitive: false }],
       errors: [
-        "Expected object keys to be in natural insensitive ascending order. 'Z' should be before 'À'."
+        {
+          message: "Expected object keys to be in natural insensitive ascending order. 'Z' should be before 'À'.",
+          suggestions: [{
+            desc: "Fix order",
+            output: "var obj = {'#':1, 'Z':2,À:3, è:4}"
+          }],
+        }
       ]
     },
 
@@ -818,7 +824,13 @@ ruleTester.run('sort-keys-shorthand', rule, {
       code: "var obj = {'':1, a:'2'} // desc",
       options: ['desc'],
       errors: [
-        "Expected object keys to be in descending order. 'a' should be before ''."
+        {
+          message: "Expected object keys to be in descending order. 'a' should be before ''.",
+          suggestions: [{
+            desc: "Fix order",
+            output: "var obj = {a:'2','':1} // desc"
+          }],
+        }
       ]
     },
     {
@@ -826,7 +838,13 @@ ruleTester.run('sort-keys-shorthand', rule, {
       options: ['desc'],
       parserOptions: { ecmaVersion: 6 },
       errors: [
-        "Expected object keys to be in descending order. 'a' should be before ''."
+        {
+          message: "Expected object keys to be in descending order. 'a' should be before ''.",
+          suggestions: [{
+            desc: "Fix order",
+            output: "var obj = {a:'2',[``]:1} // desc"
+          }],
+        }
       ]
     },
     {
@@ -869,8 +887,20 @@ ruleTester.run('sort-keys-shorthand', rule, {
       code: "var obj = {1:1, 2:4, A:3, '11':2}",
       options: ['desc'],
       errors: [
-        "Expected object keys to be in descending order. '2' should be before '1'.",
-        "Expected object keys to be in descending order. 'A' should be before '2'."
+        {
+          message: "Expected object keys to be in descending order. '2' should be before '1'.",
+          suggestions: [{
+            desc: "Fix order",
+            output: "var obj = {2:4,1:1, A:3, '11':2}"
+          }],
+        },
+        {
+          message: "Expected object keys to be in descending order. 'A' should be before '2'.",
+          suggestions: [{
+            desc: "Fix order",
+            output: "var obj = {1:1, A:3,2:4, '11':2}"
+          }],
+        }
       ]
     },
     {
@@ -1136,7 +1166,15 @@ ruleTester.run('sort-keys-shorthand', rule, {
       options: ['asc', { shorthand: 'last', ignoreSingleline: true }],
       parserOptions: { ecmaVersion: 2018 },
       errors: [
-        "Expected object keys to be in ascending order with shorthand properties last. 'a' should be before 'd'."
+        {
+          message: "Expected object keys to be in ascending order with shorthand properties last. 'a' should be before 'd'.",
+          suggestions: [{
+            desc: "Fix order",
+            output: `var obj = {
+              a:1,d, b:{x:1, y:1}, c:1, e,
+            }`
+          }],
+        }
       ]
     }
   ]

@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## To Be Released
 
+## 2.3.0
+
+- Add support for suggestions
+
 ## 2.2.0
 
 - Support ESLint 8 [#16](https://github.com/fxOne/eslint-plugin-sort-keys-shorthand/issues/14)

@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-sort-keys-shorthand",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "eslint plugin which support sorting shorthand keys",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "eslint"
   ],
   "peerDependencies": {
-    "eslint": "^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0"
+    "eslint": "^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "author": "Dominic Buetow",
   "license": "MIT",
