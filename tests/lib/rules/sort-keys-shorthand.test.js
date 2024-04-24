@@ -1171,8 +1171,8 @@ ruleTester.run('sort-keys-shorthand', rule, {
           suggestions: [{
             desc: "Fix order",
             output: `var obj = {
-              a:1,d, b:{x:1, y:1}, c:1, e,
-            }`
+        a:1,d, b:{x:1, y:1}, c:1, e
+      }`
           }],
         }
       ]
