@@ -5,7 +5,7 @@
 //------------------------------------------------------------------------------
 
 const rule = require('../../../lib/rules/sort-keys-shorthand'),
-  { RuleTester } = require('eslint/lib/rule-tester');
+  { RuleTester } = require('eslint');
 
 //------------------------------------------------------------------------------
 // Tests
