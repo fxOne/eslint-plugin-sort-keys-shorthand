@@ -48,8 +48,8 @@ Enable `sort-keys-shorthand`:
       "asc",
       {
         "caseSensitive": true,
-        "natural": false,
         "minKeys": 2,
+        "natural": false,
         "shorthand": "first"
       }
     ]
