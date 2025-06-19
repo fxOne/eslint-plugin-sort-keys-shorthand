@@ -4,6 +4,10 @@ Extended short-key rule to handle shorthand properties as ESLint doesn't want to
 
 - https://github.com/eslint/eslint/issues/7543
 
+# ESLint 9+ Support
+
+This plugin is compatible with **ESLint 9 and above**. If you are using ESLint 9+, please use the new [flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new) format as shown below.
+
 # Installation
 
 Install [ESLint](https://www.github.com/eslint/eslint) either locally or globally. (Note that locally, per project, is strongly preferred)
@@ -12,50 +16,43 @@ Install [ESLint](https://www.github.com/eslint/eslint) either locally or globall
 $ npm install eslint --save-dev
 ```
 
-If you installed `ESLint` globally, you have to install React plugin globally too. Otherwise, install it locally.
+If you installed `ESLint` globally, you have to install this plugin globally too. Otherwise, install it locally.
 
 ```sh
 $ npm install eslint-plugin-sort-keys-shorthand --save-dev
 ```
 
-# Configuration
+# Configuration (ESLint 9+ Flat Config Example)
 
-Add "sort-keys-shorthand" to the plugins section.
+Create an `eslint.config.js` file in your project root:
 
-```json
-{
-  "plugins": ["sort-keys-shorthand"]
-}
-```
+```js
+import sortKeysShorthand from 'eslint-plugin-sort-keys-shorthand';
 
-Deactivate the original `sort-keys` rule.
-
-```json
-{
-  "rules": {
-    "sort-keys": 0
+export default [
+  {
+    plugins: {
+      'sort-keys-shorthand': sortKeysShorthand
+    },
+    rules: {
+      'sort-keys-shorthand/sort-keys-shorthand': [
+        'error',
+        'asc',
+        {
+          caseSensitive: true,
+          minKeys: 2,
+          natural: false,
+          shorthand: 'first'
+        }
+      ]
+    }
   }
-}
+];
 ```
 
-Enable `sort-keys-shorthand`:
+# Migration from .eslintrc
 
-```json
-{
-  "rules": {
-    "sort-keys-shorthand/sort-keys-shorthand": [
-      "error",
-      "asc",
-      {
-        "caseSensitive": true,
-        "minKeys": 2,
-        "natural": false,
-        "shorthand": "first"
-      }
-    ]
-  }
-}
-```
+If you are migrating from `.eslintrc` to flat config, move your plugin and rule configuration as shown above. The old `.eslintrc` format is no longer recommended for ESLint 9+.
 
 # Rules
 
