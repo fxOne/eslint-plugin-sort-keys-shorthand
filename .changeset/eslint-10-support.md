@@ -7,6 +7,3 @@ Add ESLint 10 support. This is a breaking change — ESLint 9 is no longer suppo
 - Replace deprecated `context.getSourceCode()` with `context.sourceCode` (fixes #96)
 - Update peer dependency to `eslint ^10.0.0`
 - Update all dev dependencies to latest versions
-- Migrate from yarn to pnpm
-- Switch release workflow to npm trusted publishing (OIDC)
-- Remove dependabot-auto-merge workflow
