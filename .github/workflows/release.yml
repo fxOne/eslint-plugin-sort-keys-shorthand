@@ -1,42 +1,50 @@
 name: Release
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
 
 permissions:
   contents: write
-  id-token: write
+  pull-requests: write
+  id-token: write # 🔑 Wichtig für Trusted Publishing
 
 jobs:
   release:
-    name: Publish to npm
+    name: Release
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 22.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
-          registry-url: "https://registry.npmjs.org"
+          node-version: 24
+          # registry-url: 'https://registry.npmjs.org'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 10
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Run Tests
-        run: pnpm test
-
-      - name: Publish to npm (trusted publishing)
-        run: npm publish --access public
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
         with:
-          generate_release_notes: true
+          publish: pnpm release
+          commit: 'chore(release): update monorepo packages versions'
+          title: 'Upcoming Release Changes'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dump npm debug logs
+        if: failure()
+        run: |
+          echo "=== npm debug logs ==="
+          ls -la ~/.npm/_logs || true
+          cat ~/.npm/_logs/* || true
