@@ -1,5 +1,9 @@
 # Change Log
 
+## 5.1.0
+
+- Reworked the `Fix order` suggestion so that applying it sorts the entire spread-bounded region around the reported key in a single step, instead of only swapping it with its immediate neighbour.
+
 ## 5.0.0
 
 ### Major Changes

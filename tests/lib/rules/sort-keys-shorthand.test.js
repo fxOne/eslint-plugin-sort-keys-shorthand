@@ -482,6 +482,48 @@ ruleTester.run('sort-keys-shorthand', rule, {
       ]
     },
 
+    // suggestion sorts the full region in one pass (not just an adjacent swap)
+    {
+      code: 'var obj = {a:1, d:2, c:3, b:4, e:5}',
+      options: [],
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'c' should be before 'd'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'var obj = {a:1, b:4, c:3, d:2, e:5}'
+          }]
+        },
+        {
+          message: "Expected object keys to be in ascending order. 'b' should be before 'c'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'var obj = {a:1, b:4, c:3, d:2, e:5}'
+          }]
+        }
+      ]
+    },
+    // region sort stays within spread-bounded groups
+    {
+      code: 'var obj = {d:1, a:2, ...x, f:3, e:4}',
+      options: [],
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'a' should be before 'd'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'var obj = {a:2, d:1, ...x, f:3, e:4}'
+          }]
+        },
+        {
+          message: "Expected object keys to be in ascending order. 'e' should be before 'f'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'var obj = {d:1, a:2, ...x, e:4, f:3}'
+          }]
+        }
+      ]
+    },
     // not ignore properties not separated by spread properties
     {
       code: 'var obj = {...z, c:1, b:1}',
@@ -950,7 +992,7 @@ ruleTester.run('sort-keys-shorthand', rule, {
           message: "Expected object keys to be in descending order. 'a' should be before ''.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {a:'2','':1} // desc"
+            output: "var obj = {a:'2', '':1} // desc"
           }],
         }
       ]
@@ -963,7 +1005,7 @@ ruleTester.run('sort-keys-shorthand', rule, {
           message: "Expected object keys to be in descending order. 'a' should be before ''.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {a:'2',[``]:1} // desc"
+            output: "var obj = {a:'2', [``]:1} // desc"
           }],
         }
       ]
@@ -1030,14 +1072,14 @@ ruleTester.run('sort-keys-shorthand', rule, {
           message: "Expected object keys to be in descending order. '2' should be before '1'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {2:4,1:1, A:3, '11':2}"
+            output: "var obj = {A:3, 2:4, '11':2, 1:1}"
           }],
         },
         {
           message: "Expected object keys to be in descending order. 'A' should be before '2'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {1:1, A:3,2:4, '11':2}"
+            output: "var obj = {A:3, 2:4, '11':2, 1:1}"
           }],
         }
       ]
@@ -1132,14 +1174,14 @@ ruleTester.run('sort-keys-shorthand', rule, {
           message: "Expected object keys to be in insensitive descending order. '2' should be before '1'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {2:4,1:1, A:3, '11':2}"
+            output: "var obj = {A:3, 2:4, '11':2, 1:1}"
           }],
         },
         {
           message: "Expected object keys to be in insensitive descending order. 'A' should be before '2'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {1:1, A:3,2:4, '11':2}"
+            output: "var obj = {A:3, 2:4, '11':2, 1:1}"
           }],
         }
       ]
@@ -1238,14 +1280,14 @@ ruleTester.run('sort-keys-shorthand', rule, {
           message: "Expected object keys to be in natural descending order. '2' should be before '1'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {2:4,1:1, A:3, '11':2}"
+            output: "var obj = {A:3, '11':2, 2:4, 1:1}"
           }],
         },
         {
           message: "Expected object keys to be in natural descending order. 'A' should be before '2'.",
           suggestions: [{
             desc: "Fix order",
-            output: "var obj = {1:1, A:3,2:4, '11':2}"
+            output: "var obj = {A:3, '11':2, 2:4, 1:1}"
           }],
         }
       ]
