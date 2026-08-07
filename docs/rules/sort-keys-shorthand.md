@@ -57,6 +57,55 @@ let obj = { a: 1, [tag`c`]: 3, b: 2 };
 let obj = { b: 1, ...c, a: 2 };
 ```
 
+## The `Fix order` suggestion
+
+Every report offers a `Fix order` suggestion. It is a suggestion rather than an
+auto-fix because re-ordering properties can change behaviour — think getters,
+spread precedence or a key whose value depends on evaluation order. Applying it
+is therefore always an explicit decision.
+
+The suggestion sorts the **whole region** the reported property belongs to, not
+just the two properties named in the message. A region is bounded by spread
+properties, matching what the rule itself checks:
+
+```js
+// applying the suggestion on `a` sorts `d, a` and leaves `f, e` untouched
+let obj = { d: 1, a: 2, ...x, f: 3, e: 4 };
+```
+
+A computed key the rule cannot name — a template literal with an expression, a
+member expression — is skipped by the check, so the suggestion leaves it at its
+position and sorts the keys around it:
+
+```js
+// applying the suggestion sorts `b, a` and leaves `[k.x]` where it is
+let obj = { b: 1, [k.x]: 2, a: 3 };
+```
+
+Comments travel with their property:
+
+- A comment on its own line above a property is that property's **leading**
+  comment and moves with it. This includes suppression comments such as
+  `eslint-disable-next-line` and `@ts-expect-error`, which would otherwise end
+  up suppressing a different property.
+- A comment that starts on the property's last line is its **trailing** comment
+  and moves with it, landing after the comma of its new position.
+- A comment on the object's opening line describes the object, and a comment on
+  its own line after the last property belongs to no property. Both stay where
+  they are.
+
+Blank lines, commas and indentation are separators: they keep their positions.
+A blank line therefore does not follow the property it used to precede, and
+blank-line grouping is not preserved — the sort dissolves those groups anyway.
+
+Two remaining limitations:
+
+- Nested objects need one application per nesting level. Sorting an outer object
+  does not sort the objects inside its values.
+- The suggestion is withheld when a line comment cannot be placed without
+  commenting out the code behind it, for example when it would have to move to
+  the last position of a single-line object.
+
 ## Options
 
 ```json
