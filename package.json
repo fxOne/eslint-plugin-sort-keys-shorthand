@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-sort-keys-shorthand",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "eslint plugin which support sorting shorthand keys",
   "main": "index.js",
   "scripts": {
@@ -16,14 +16,19 @@
   "author": "Dominic Buetow",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.30.0",
-    "eslint": "^10.2.0",
-    "eslint-plugin-import": "^2.32.0",
+    "@changesets/cli": "^2.31.1",
+    "eslint": "^10.8.0",
     "istanbul": "^0.4.5",
-    "mocha": "11.7.5"
+    "mocha": "11.8.0"
   },
   "dependencies": {
     "natural-compare": "^1.4.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "diff": "^8.0.3",
+      "serialize-javascript": "^7.0.7"
+    }
   },
   "repository": {
     "type": "git",

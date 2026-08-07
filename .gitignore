@@ -5,3 +5,4 @@
 !.vscode/extensions.json
 node_modules/*
 coverage/*
+.serena/

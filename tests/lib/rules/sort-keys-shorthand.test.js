@@ -1482,6 +1482,355 @@ ruleTester.run('sort-keys-shorthand', rule, {
           suggestions: 1
         }
       ]
+    },
+
+    // suggestion moves comments with their property
+    {
+      code: `const o = {
+  // explains zebra
+  zebra: 1,
+  alpha: 2, // trailing on alpha
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2, // trailing on alpha
+  // explains zebra
+  zebra: 1,
+};`
+          }]
+        }
+      ]
+    },
+    // a suppression comment stays on the property it suppresses
+    {
+      code: `const o = {
+  zebra: 1,
+  // @ts-expect-error alpha is intentionally untyped
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  // @ts-expect-error alpha is intentionally untyped
+  alpha: 2,
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // blank lines are separators and stay at their position
+    {
+      code: `const o = {
+  zebra: 1,
+
+  // about alpha
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  // about alpha
+  alpha: 2,
+
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // a comment on its own line after the last property belongs to no property
+    {
+      code: `const o = {
+  zebra: 1,
+  alpha: 2
+  // dangling
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2,
+  zebra: 1
+  // dangling
+};`
+          }]
+        }
+      ]
+    },
+    // a comment on the object's opening line describes the object, not a property
+    {
+      code: `const o = { // about the object
+  zebra: 1,
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = { // about the object
+  alpha: 2,
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // the last property has no comma to hang its trailing comment on
+    {
+      code: `const o = {
+  zebra: 1,
+  alpha: 2 // note on alpha
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2, // note on alpha
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // trailing comments swap along with their properties
+    {
+      code: `const o = {
+  zebra: 1, // t1
+  alpha: 2, // t2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2, // t2
+  zebra: 1, // t1
+};`
+          }]
+        }
+      ]
+    },
+    // leading comment on the first property of a spread-bounded region
+    {
+      code: `const o = {
+  ...rest,
+  // about zebra
+  zebra: 1,
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  ...rest,
+  alpha: 2,
+  // about zebra
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // in a single-line object a block comment trails the property before it
+    {
+      code: 'const o = {b:1, /* c */ a:2};',
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'const o = {a:2, b:1 /* c */};'
+          }]
+        }
+      ]
+    },
+    // no suggestion when a line comment would have to move onto a line that continues
+    {
+      code: `const o = { zebra: 1, // hi
+  alpha: 2 };`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: []
+        }
+      ]
+    },
+    // a comment on the closing line of a multi-line property trails that property
+    {
+      code: `const o = {
+  zebra: {
+    x: 1
+  }, // about the zebra object
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2,
+  zebra: {
+    x: 1
+  } // about the zebra object
+};`
+          }]
+        }
+      ]
+    },
+    // every own-line comment above a property travels with it
+    {
+      code: `const o = {
+  zebra: 1,
+  // first
+  // second
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  // first
+  // second
+  alpha: 2,
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // a property carries its leading and its trailing comment at once
+    {
+      code: `const o = {
+  zebra: 1,
+  // leading alpha
+  alpha: 2 // trailing alpha
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  // leading alpha
+  alpha: 2, // trailing alpha
+  zebra: 1
+};`
+          }]
+        }
+      ]
+    },
+    // a comment between the property and its comma trails the property
+    {
+      code: `const o = {
+  zebra: 1 /* zc */,
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2,
+  zebra: 1 /* zc */
+};`
+          }]
+        }
+      ]
+    },
+    // properties with the same key keep their relative order
+    {
+      code: `const o = {
+  get zebra() { return 1; },
+  set zebra(v) {},
+  alpha: 2
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  alpha: 2,
+  get zebra() { return 1; },
+  set zebra(v) {}
+};`
+          }]
+        }
+      ]
+    },
+    // CRLF line endings survive a moving trailing comment
+    {
+      code:
+        'const o = {\r\n  // about zebra\r\n  zebra: 1,\r\n  alpha: 2 // hi\r\n};',
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'alpha' should be before 'zebra'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output:
+              'const o = {\r\n  alpha: 2, // hi\r\n  // about zebra\r\n  zebra: 1\r\n};'
+          }]
+        }
+      ]
+    },
+    // a key the rule cannot name keeps its position while the rest is sorted
+    {
+      code: 'const o = {b: 1, [`z${x}`]: 2, a: 3};',
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: 'const o = {a: 3, [`z${x}`]: 2, b: 1};'
+          }]
+        }
+      ]
+    },
+    // the same, with the comments of the surrounding properties
+    {
+      code: `const o = {
+  b: 1, // about b
+  // about the computed key
+  [\`z\${x}\`]: 2,
+  a: 3
+};`,
+      errors: [
+        {
+          message: "Expected object keys to be in ascending order. 'a' should be before 'b'.",
+          suggestions: [{
+            desc: 'Fix order',
+            output: `const o = {
+  a: 3,
+  // about the computed key
+  [\`z\${x}\`]: 2,
+  b: 1 // about b
+};`
+          }]
+        }
+      ]
     }
   ]
 });
